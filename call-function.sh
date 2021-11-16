@@ -1,0 +1,1 @@
+curl https://asia-northeast1-twitter-bot-positive-demon.cloudfunctions.net/send_tweet
