@@ -1,0 +1,1 @@
+gcloud functions deploy send_tweet --trigger-http --runtime=python38 --allow-unauthenticated --region=asia-northeast1 --env-vars-file .env.yaml
