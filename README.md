@@ -16,7 +16,11 @@
 
 ### 1. Make `.env.yaml`
 
-Create `.env.yaml` if not exists, in root directory.
+Copy and create `.env.yaml` from `.env-template.yaml`, in root directory.
+
+```bash
+cp .env-template.yaml .env.yaml
+```
 
 And then set the values below:
 
