@@ -16,3 +16,13 @@
 node_modules
 #!include:.gitignore
 tweets_list.json
+img/
+venv/
+.env-template.yaml
+call-function.sh
+deploy-function.sh
+make_tweets_list.py
+README.md
+tweets-raw.csv
+tweets-tbl.csv
+

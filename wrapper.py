@@ -1,10 +1,12 @@
 """Wrappe for not main proc (like autharization)
 """
+from io import BytesIO
 from os import getenv
 import json
 
 import gspread
 from google.cloud import storage
+import pandas as pd
 import tweepy
 
 class TweepyWrapper:
@@ -55,20 +57,24 @@ class GspreadWrapper:
 
 
 BUCKET_NAME = "tweet-source"
-TWEETS_LIST_BLOB_NAME = "tweets_list.json"
+#TWEETS_LIST_BLOB_NAME = "tweets_list.json"
+TWEETS_LIST_BLOB_NAME = "tweets-tbl.csv"
+IMG_LIST_FOLDER_NAME = "img"
 
 class GCSWrapper:
 
     def __init__(self) -> None:
         _storage_client = storage.Client()
-        _bucket = _storage_client.bucket(BUCKET_NAME)
-        self.__blob = _bucket.blob(TWEETS_LIST_BLOB_NAME)
-        _blob_txt = self.__blob.download_as_text()
-        self.__tweets_list = json.loads(_blob_txt)
+        self.__bucket = _storage_client.bucket(BUCKET_NAME)
+        self.__blob = self.__bucket.blob(TWEETS_LIST_BLOB_NAME)
+        _blob_bin = self.__blob.download_as_bytes()
+        self.__tweets_df = pd.read_csv(BytesIO(_blob_bin))
+        # _blob_txt = self.__blob.download_as_text()
+        # self.__tweets_list = json.loads(_blob_txt)
 
     @property
-    def tweets(self):
-        return self.__tweets_list
+    def tweets_df(self) -> pd.DataFrame:
+        return self.__tweets_df
 
     def update_tweets(self, tweets: list):
         try:
@@ -76,3 +82,7 @@ class GCSWrapper:
         except:
             print('failed to upload json (I will solve this problem in a few days.)')
 
+    def download_image_by_name(self, img_name: str) -> BytesIO:
+        _blob_img = self.__bucket.blob(f"{IMG_LIST_FOLDER_NAME}/{img_name}")
+        _blob_bin = _blob_img.download_as_bytes()
+        return BytesIO(_blob_bin)
