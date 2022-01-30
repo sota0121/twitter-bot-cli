@@ -5,3 +5,5 @@ gspread
 google-cloud-storage
 pandas
 click==8.0.3
+PyYAML==6.0
+

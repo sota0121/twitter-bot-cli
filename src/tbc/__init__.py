@@ -3,8 +3,9 @@ from typing import Optional
 import click
 
 from tbc.constants import *
-from tbc.send_tweet import send_tweet, send_tweet_from_cli
 from tbc.make_tweets_list import TweetTableMaker
+from tbc.send_tweet import send_tweet, send_tweet_from_cli
+from tbc.config_parser import CfgParser
 
 
 @click.group()
@@ -39,10 +40,24 @@ def main() -> None:
         "e.g. tbc send -i ./test.jpg"
     )
 )
+@click.option(
+    "-ef",
+    "--env-file",
+    type=str,
+    help=(
+        "[Option] env file path"
+        "default: .env.yaml"
+        "e.g. tbc --env-file .env.yaml send ..."
+    )
+)
 def send(msg: Optional[str]=None,
          msg_file: Optional[str]=None,
-         img_file: Optional[str]=None) -> None:
+         img_file: Optional[str]=None,
+         env_file: Optional[str]=".env.yaml") -> None:
     """send tweet command"""
+    click.echo(f"load : {env_file}")
+    CfgParser(env_file)
+
     # Parse args
     if (msg is None) and (msg_file is None):
         print("No message is set.")

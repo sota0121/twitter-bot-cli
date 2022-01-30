@@ -29,6 +29,7 @@ setup(
         "gspread",
         "google-cloud-storage",
         "pandas",
+        "PyYAML"
     ],
     entry_points={
         "console_scripts": [
