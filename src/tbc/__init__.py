@@ -9,7 +9,7 @@ from tbc.make_tweets_list import TweetTableMaker
 
 @click.group()
 def main() -> None:
-    pass
+    click.echo("Welcome to tbc !!!")
 
 @main.command()
 @click.option(

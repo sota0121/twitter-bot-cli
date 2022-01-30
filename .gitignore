@@ -1,2 +1,5 @@
 .env.yaml
 venv/
+build/
+dist/
+*egg-info/

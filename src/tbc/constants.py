@@ -1,4 +1,3 @@
-import imp
 from enum import IntEnum
 from enum import unique
 from typing import Final

@@ -2,10 +2,10 @@ import random
 from datetime import date
 from typing import Optional
 
-from constants import *
-from wrapper import TweepyWrapper as tw
-from wrapper import GspreadWrapper as gw
-from wrapper import GCSWrapper as gcsw
+from tbc.constants import *
+from tbc.wrapper import TweepyWrapper as tw
+from tbc.wrapper import GspreadWrapper as gw
+from tbc.wrapper import GCSWrapper as gcsw
 
 
 def get_date_idx() -> int:
