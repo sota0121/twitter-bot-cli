@@ -7,3 +7,4 @@ pandas
 click==8.0.3
 PyYAML==6.0
 
+pytest==6.2.5
