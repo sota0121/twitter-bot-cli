@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from tbc.constants import *
+from tbc.tbclib.constants import *
 
 
 class TweetTableMaker:

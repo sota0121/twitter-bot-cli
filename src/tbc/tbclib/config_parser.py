@@ -6,7 +6,7 @@ from typing import Optional
 
 from yaml import safe_load
 
-from tbc.constants import *
+from tbc.tbclib.constants import *
 
 
 class CfgParser:
