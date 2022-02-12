@@ -3,6 +3,7 @@ from datetime import date
 from typing import Optional
 
 from tbc.tbclib.constants import *
+from tbc.tbclib.errors import *
 from tbc.tbclib.wrapper import TweepyWrapper as tw
 from tbc.tbclib.wrapper import GspreadWrapper as gw
 from tbc.tbclib.wrapper import GCSWrapper as gcsw
