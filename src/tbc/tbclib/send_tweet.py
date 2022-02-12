@@ -2,6 +2,7 @@ import random
 from datetime import date
 from typing import Optional
 
+from tbc.tbclib.config_parser import (TbcConfig, CfgParser)
 from tbc.tbclib.constants import *
 from tbc.tbclib.errors import *
 from tbc.tbclib.wrapper import TweepyWrapper as tw
@@ -41,7 +42,8 @@ def send_tweet(request):
         img_file = gcs_app.download_image_by_name(img_name)
 
         # send words
-        tw_app = tw()
+        cfg = CfgParser.load()
+        tw_app = tw(cfg)
         media = tw_app.api.media_upload(filename="img.jpg", file=img_file)
         result = tw_app.api.update_status(status=tweet_str, media_ids=[media.media_id])
     except KeyError as e:
@@ -54,9 +56,10 @@ def send_tweet(request):
         return f'tweeted > \n{tweet_str}'
 
 
-def send_tweet_from_cli(msg: str,
+def send_tweet_from_cli(cfg: TbcConfig,
+                        msg: str,
                         img_file: Optional[str] = None) -> None:
-    tw_app = tw()
+    tw_app = tw(cfg)
     if img_file is None:
         tw_app.api.update_status(status=msg)
     else:

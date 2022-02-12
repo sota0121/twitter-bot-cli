@@ -1,3 +1,5 @@
+from email.policy import default
+import sys
 from typing import Optional
 
 import click
@@ -5,7 +7,7 @@ import click
 from tbc.tbclib.constants import *
 from tbc.tbclib.make_tweets_list import TweetTableMaker
 from tbc.tbclib.send_tweet import send_tweet, send_tweet_from_cli
-from tbc.tbclib.config_parser import CfgParser
+from tbc.tbclib.config_parser import *
 
 
 # tbc
@@ -44,24 +46,31 @@ def main() -> None:
     )
 )
 @click.option(
-    "-ef",
-    "--env-file",
+    "-c",
+    "--config",
     type=str,
+    default=".tbcconfig.yml",
     help=(
-        "[Option] env file path"
-        "default: .env.yaml"
-        "e.g. tbc --env-file .env.yaml send ..."
+        "[Option] config file path\n"
+        "default: .tbcconfig.yml\n"
+        "e.g. tbc --config .tbcconfig.yml send ..."
     )
 )
 def send(msg: Optional[str]=None,
          msg_file: Optional[str]=None,
          img_file: Optional[str]=None,
-         env_file: Optional[str]=None) -> None:
+         config: Optional[str]=None) -> None:
     """send tweet command"""
-    # Parse env_file args
-    if env_file is not None:
-        click.echo(f"load : {env_file}")
-        CfgParser(env_file)
+    # Parse config args
+    cfg: TbcConfig = TbcConfig()
+    if config is not None:
+        click.echo(f"load : {config}")
+        cfg = CfgParser.load(config)
+
+    # Check values
+    if not cfg.twitter_tokens_exist():
+        print(MSG_ERR_NOT_FOUND_APIKEY)
+        sys.exit(1)
 
     # Parse message args
     if (msg is None) and (msg_file is None):
@@ -77,9 +86,9 @@ def send(msg: Optional[str]=None,
                 _msg_text = f.read()
         try:
             if img_file is None:
-                send_tweet_from_cli(_msg_text)
+                send_tweet_from_cli(cfg, _msg_text)
             else:
-                send_tweet_from_cli(_msg_text, img_file)
+                send_tweet_from_cli(cfg, _msg_text, img_file)
             print("successfully tweeted")
         except Exception as e:
             print(f"something is wrong ... ({repr(e)})")

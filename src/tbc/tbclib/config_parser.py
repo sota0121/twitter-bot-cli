@@ -86,15 +86,24 @@ class TbcConfig:
     src_gspr_path: str = ""
     # keys ... future impl
 
+    def twitter_tokens_exist(self) -> bool:
+        """Checks if twitter token info exists or not
+
+            twitter api tokens must be set
+        """
+        if (self.tw_consumer_key == "") or (self.tw_consumer_secret == "") or (
+                self.tw_access_token == "") or (self.tw_access_secret == ""):
+            return False
+        return True
+
 
 class CfgParser:
     """config parser"""
     def __init__(self, path: Optional[str]=None) -> None:
-        self._cfg_path = path
-        #self._load_envval()
-        self._load(path)
+        pass
 
-    def _load(self, path: Optional[str]=None) -> TbcConfig:
+    @staticmethod
+    def load(path: Optional[str]=None) -> TbcConfig:
         """Load Config Values and Return Config Object
 
             if path set, load config values from the file
@@ -153,4 +162,3 @@ class CfgParser:
                         os.environ[k] = v
         except Exception as e:
             raise TbcError(f"failed to load environ file ({self._cfg_path})")
-
