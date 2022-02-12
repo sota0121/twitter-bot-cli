@@ -4,7 +4,7 @@ import tempfile
 import pytest
 import yaml
 
-from tbc.config_parser import CfgParser
+from tbc.tbclib.config_parser import CfgParser
 
 
 
