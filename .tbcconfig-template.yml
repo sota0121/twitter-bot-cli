@@ -1,0 +1,34 @@
+version: "1"
+
+twitter:
+  consumer_key: ""
+  consumer_secret: ""
+  access_token: ""
+  access_secret: ""
+
+source:
+  # local, gcs, gspread
+  src_type: "local"
+
+  # for local
+  local:
+    path: ""
+
+  # for gcs
+  gcs:
+    path: ""
+    # gs_type: ""
+    # gs_project_id: ""
+    # gs_private_key_id: ""
+
+  # for gspread
+  gspread:
+    path: ""
+    # gs_private_key: ''
+    # gs_client_email: ""
+    # gs_client_id: ""
+    # gs_auth_uri: ""
+    # gs_token_uri: ""
+    # gs_auth_provider_x509_cert_url: ""
+    # gs_client_x509_cert_url: ""
+
