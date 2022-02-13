@@ -25,7 +25,7 @@ Make Pip package, and send tweet from cli.
 
 ## v0.3.0
 
-status: `wip`
+status: `done`
 
 Enable you to setup with cli.
 
@@ -36,8 +36,8 @@ Enable you to setup with cli.
     - ~~`tbc config --secret $CONFIG_FILE_PATH`~~
     - ~~load config file and set secrets to envval~~
 - Patches
-  - change `tbc send` --> `tbc bot send`
-  - add `tbc config list`, `tbc config get`, `tbc config set -f`
+  - ~~change `tbc send` --> `tbc bot send`~~
+  - ~~add `tbc config list`, `tbc config get`, `tbc config set -f`~~
 
 
 ## v0.4.0
