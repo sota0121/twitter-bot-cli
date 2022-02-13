@@ -15,6 +15,34 @@ from tbc.tbclib.config_parser import *
 # https://click.palletsprojects.com/en/8.0.x/commands/#merging-multi-commands
 
 
+# Command Option Validation (future, collect as a class)
+def validate_options_bot_send(msg: Optional[str], img_file: Optional[str],
+                              sel_rand: Optional[bool], sel_seq: Optional[int],
+                              src: Optional[str]) -> bool:
+    """Validate tbc bot send command option"""
+    # DON'T USE TOGETHER (msg) and (sel_rand or sel_seq)
+    if (msg is not None) and ((sel_rand is True) or (sel_seq is not None)):
+        print(MSG_ERR_BOT_SEND_INVALID_OPT_0)
+        return False
+
+    # DON'T USE TOGETHER sel_rand and sel_seq
+    if (sel_rand is True) and (sel_seq is not None):
+        print(MSG_ERR_BOT_SEND_INVALID_OPT_1)
+        return False
+
+    # DON'T USE (img_file) without (msg)
+    if (img_file is not None) and (msg is None):
+        print(MSG_ERR_BOT_SEND_INVALID_OPT_2)
+        return False
+
+    # DON'T USE (src) without (sel_rand or sel_seq)
+    if (src is not None) and ((sel_rand is False) and (sel_seq is None)):
+        print(MSG_ERR_BOT_SEND_INVALID_OPT_3)
+        return False
+
+    return True
+
+
 # tbc
 @click.group(name='tbc')
 def main() -> None:
@@ -51,6 +79,36 @@ def bot() -> None:
     )
 )
 @click.option(
+    "-sr",
+    "--sel-rand",
+    is_flag=True,
+    default=False,
+    help=(
+        "[Option] Random select from tweet table\n"
+        ".tbcconfig.yml > source\n"
+        "You can use either `--sel-rand` or `--sel-seq` option."
+    )
+)
+@click.option(
+    "-ss",
+    "--sel-seq",
+    type=int,
+    default=False,
+    help=(
+        "[Option] Select specific record from tweet table\n"
+        ".tbcconfig.yml > source\n"
+        "You can use either `--sel-rand` or `--sel-seq` option."
+    )
+)
+@click.option(
+    "-s", "--src",
+    type=str,
+    help=(
+        "[Option] tweet table file path\n"
+        "Use this option with --sel-rand or --sel-seq option."
+    )
+)
+@click.option(
     "-c",
     "--config",
     type=str,
@@ -61,9 +119,12 @@ def bot() -> None:
         "e.g. tbc --config .tbcconfig.yml send ..."
     )
 )
-def send(msg: Optional[str]=None,
-         img_file: Optional[str]=None,
-         config: Optional[str]=None) -> None:
+def send(msg: Optional[str] = None,
+         img_file: Optional[str] = None,
+         sel_rand: Optional[bool] = False,
+         sel_seq: Optional[int] = None,
+         src: Optional[str] = None,
+         config: Optional[str] = None) -> None:
     """send tweet command"""
     # Parse config args
     cfg: TbcConfig = TbcConfig()
@@ -71,9 +132,14 @@ def send(msg: Optional[str]=None,
         click.echo(f"load : {config}")
         cfg = CfgParser.load(config)
 
-    # Check values
+    # Check config values
     if not cfg.twitter_tokens_exist():
         print(MSG_ERR_NOT_FOUND_APIKEY)
+        sys.exit(1)
+
+    # Validate Options
+    if validate_options_bot_send(msg, img_file, sel_rand, sel_seq, src) is False:
+        print(MSG_ERR_BOT_SEND_INVALID_OPT)
         sys.exit(1)
 
     # Parse message args
