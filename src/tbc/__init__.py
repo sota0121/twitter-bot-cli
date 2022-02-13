@@ -1,8 +1,9 @@
-from email.policy import default
+import random
 import sys
 from typing import Optional
 
 import click
+import pandas as pd
 
 from tbc.tbclib.constants import *
 from tbc.tbclib.make_tweets_list import TweetTableMaker
@@ -44,6 +45,21 @@ def validate_options_bot_send(msg: Optional[str], img_file: Optional[str],
     # USE AT LEAST ONE ARG ABOUT MESSAGE DATA
     if (msg is None) and (sel_rand is False) and (sel_seq is None):
         print(MSG_ERR_BOT_SEND_INVALID_OPT_4)
+        return False
+
+    return True
+
+
+# Tweet table data validation
+def validate_tweet_tbl_cols(tw_tbl: pd.DataFrame) -> bool:
+    """Validate tbc tweet table columns"""
+    # text COLUMN DOESN'T EXISTS
+    if not 'text' in tw_tbl.columns:
+        print(MSG_ERR_BOT_SEND_TWEET_TBL_SCHEMA_INVALID_0)
+        return False
+    # imgName COLUMN DOESN'T EXISTS
+    if not 'imgName' in tw_tbl.columns:
+        print(MSG_ERR_BOT_SEND_TWEET_TBL_SCHEMA_INVALID_1)
         return False
 
     return True
@@ -150,12 +166,33 @@ def send(msg: Optional[str] = None,
     # Create tweet content
     tc = TweetContent()
     if msg is None:
+        # get table
+        _tweet_tbl: pd.DataFrame = None
+        if src is None:
+            _tweet_tbl = pd.read_csv(cfg.src_lo_path)
+        else:
+            _tweet_tbl = pd.read_csv(src)
+
+        # check table columns
+        if validate_tweet_tbl_cols(_tweet_tbl) is False:
+            print(MSG_ERR_BOT_SEND_TWEET_TBL_SCHEMA_INVALID)
+            sys.exit(1)
+
+        # get record
+        _row_idx = 0
         if sel_rand is True:
-            pass
+            _row_idx = random.randrange(0, _tweet_tbl.shape[0])
         elif sel_seq is not None:
-            pass
+            _row_idx = sel_seq
         else:
             pass
+        try:
+            _row = _tweet_tbl.iloc[_row_idx]
+            tc.text = _row.text
+            tc.img_path = _row.imgName if _row.imgName != "" else None
+        except IndexError as e:
+            print(repr(e))
+            sys.exit(1)
     else:
         tc.text = msg
         if img_file is None:

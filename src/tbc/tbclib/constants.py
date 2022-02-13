@@ -28,4 +28,6 @@ MSG_ERR_BOT_SEND_INVALID_OPT_2: Final[str] = "DON'T USE (img_file) without (msg)
 MSG_ERR_BOT_SEND_INVALID_OPT_3: Final[str] = "DON'T USE (src) without (sel_rand or sel_seq)"
 MSG_ERR_BOT_SEND_INVALID_OPT_4: Final[str] = "USE AT LEAST ONE ARG ABOUT MESSAGE DATA"
 MSG_ERR_BOT_SEND_EMPTY_MSG: Final[str] = "Stopped to send message, because empty message is input."
-
+MSG_ERR_BOT_SEND_TWEET_TBL_SCHEMA_INVALID: Final[str] = "tweet table columns are invalid"
+MSG_ERR_BOT_SEND_TWEET_TBL_SCHEMA_INVALID_0: Final[str] = "text COLUMN DOESN'T EXISTS"
+MSG_ERR_BOT_SEND_TWEET_TBL_SCHEMA_INVALID_1: Final[str] = "imgName COLUMN DOESN'T EXISTS"
