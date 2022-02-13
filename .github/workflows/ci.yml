@@ -9,12 +9,22 @@ on:
   push:
     paths-ignore:
       - "scripts/**"
+      - "docs/**"
       - "*.md"
+      - ".gitignore"
+      - ".gcloudignore"
+      - "*.yaml"
+      - "*.yml"
 
   pull_request:
     paths-ignore:
       - "scripts/**"
+      - "docs/**"
       - "*.md"
+      - ".gitignore"
+      - ".gcloudignore"
+      - "*.yaml"
+      - "*.yml"
 
 
 jobs:

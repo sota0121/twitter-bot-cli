@@ -1,18 +1,37 @@
+from email.policy import default
+import sys
 from typing import Optional
 
 import click
 
-from tbc.constants import *
-from tbc.make_tweets_list import TweetTableMaker
-from tbc.send_tweet import send_tweet, send_tweet_from_cli
-from tbc.config_parser import CfgParser
+from tbc.tbclib.constants import *
+from tbc.tbclib.make_tweets_list import TweetTableMaker
+from tbc.tbclib.send_tweet import send_tweet, send_tweet_from_cli
+from tbc.tbclib.config_parser import *
 
 
-@click.group()
+# Command Collection
+# https://click.palletsprojects.com/en/8.0.x/commands/
+# https://click.palletsprojects.com/en/8.0.x/commands/#merging-multi-commands
+
+
+# tbc
+@click.group(name='tbc')
 def main() -> None:
     click.echo("Welcome to tbc !!!")
 
-@main.command()
+
+# tbc bot
+@main.group(
+    name='bot',
+    help="bot operation command"
+)
+def bot() -> None:
+    click.echo("bot sub command !!!")
+
+
+# tbc bot send
+@bot.command()
 @click.option(
     "-m",
     "--msg",
@@ -41,24 +60,33 @@ def main() -> None:
     )
 )
 @click.option(
-    "-ef",
-    "--env-file",
+    "-c",
+    "--config",
     type=str,
+    default=".tbcconfig.yml",
     help=(
-        "[Option] env file path"
-        "default: .env.yaml"
-        "e.g. tbc --env-file .env.yaml send ..."
+        "[Option] config file path\n"
+        "default: .tbcconfig.yml\n"
+        "e.g. tbc --config .tbcconfig.yml send ..."
     )
 )
 def send(msg: Optional[str]=None,
          msg_file: Optional[str]=None,
          img_file: Optional[str]=None,
-         env_file: Optional[str]=".env.yaml") -> None:
+         config: Optional[str]=None) -> None:
     """send tweet command"""
-    click.echo(f"load : {env_file}")
-    CfgParser(env_file)
+    # Parse config args
+    cfg: TbcConfig = TbcConfig()
+    if config is not None:
+        click.echo(f"load : {config}")
+        cfg = CfgParser.load(config)
 
-    # Parse args
+    # Check values
+    if not cfg.twitter_tokens_exist():
+        print(MSG_ERR_NOT_FOUND_APIKEY)
+        sys.exit(1)
+
+    # Parse message args
     if (msg is None) and (msg_file is None):
         print("No message is set.")
     elif (msg is not None) and (msg_file is not None):
@@ -72,12 +100,65 @@ def send(msg: Optional[str]=None,
                 _msg_text = f.read()
         try:
             if img_file is None:
-                send_tweet_from_cli(_msg_text)
+                send_tweet_from_cli(cfg, _msg_text)
             else:
-                send_tweet_from_cli(_msg_text, img_file)
+                send_tweet_from_cli(cfg, _msg_text, img_file)
             print("successfully tweeted")
         except Exception as e:
             print(f"something is wrong ... ({repr(e)})")
+
+
+# tbc config
+@main.group(
+    name="config",
+    help="config operation command"
+)
+def config() -> None:
+    click.echo("tbc config !!!")
+
+
+# tbc config get
+@config.command(name="get")
+@click.option(
+    "-k",
+    "--keyname",
+    type=str,
+    help=(
+        "select key name of\n"
+        "config values\n"
+    )
+)
+def cfg_get(keyname: str) -> None:
+    """tbc config get"""
+    cfg_obj: TbcConfig = CfgParser.load(CfgParser.default_cfg_name())
+    target_val = cfg_obj.get_val(keyname)
+    print(f"{keyname}={target_val}")
+
+
+# tbc config list
+@config.command(name="list")
+def cfg_list() -> None:
+    """tbc config list"""
+    cfg_obj: TbcConfig = CfgParser.load(CfgParser.default_cfg_name())
+    for k, v in cfg_obj.get_all_items():
+        print(k, "=", v)
+
+# @click.option(
+#     "-s",
+#     "--secret",
+#     type=str,
+#     help=(
+#         "config file path that secrets keys are written"
+#         "e.g. tbc config --secret ./env.yml"
+#     )
+# )
+# def config(secret: Optional[str]=None) -> None:
+#     """config operation"""
+#     # Parse args
+#     # -- config secret
+#     if secret is not None:
+#         click.echo(f"load : {secret}")
+#         CfgParser(secret)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,31 @@
+version: "1"
+
+twitter:
+  consumer_key: "twitter_api_consumer_key"
+  consumer_secret: "twitter_api_consumer_secret"
+  access_token: "twitter_api_access_token"
+  access_secret: "twitter_api_access_secret"
+
+source:
+  # local, gcs, gspread
+  type: "local"
+
+  # for local
+  local_path: "path/to/local/table.csv"
+
+  # for gcs
+  gcs_path: "path/to/cloud/storage/table.csv"
+  # gs_type: ""
+  # gs_project_id: ""
+  # gs_private_key_id: ""
+
+  # for gspread
+  gspread_path: "path/to/spreadsheet/table"
+  # gs_private_key: ''
+  # gs_client_email: ""
+  # gs_client_id: ""
+  # gs_auth_uri: ""
+  # gs_token_uri: ""
+  # gs_auth_provider_x509_cert_url: ""
+  # gs_client_x509_cert_url: ""
+

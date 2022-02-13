@@ -9,13 +9,16 @@ from google.cloud import storage
 import pandas as pd
 import tweepy
 
+from tbc.tbclib.config_parser import TbcConfig
+
+
 class TweepyWrapper:
 
-    def __init__(self) -> None:
-        consumer_key = getenv("consumer_key")
-        consumer_secret = getenv("consumer_secret")
-        access_token = getenv("access_token")
-        access_secret = getenv("access_secret")
+    def __init__(self, cfg: TbcConfig) -> None:
+        consumer_key = cfg.tw_consumer_key
+        consumer_secret = cfg.tw_consumer_secret
+        access_token = cfg.tw_access_token
+        access_secret = cfg.tw_access_secret
 
         self.__auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         self.__auth.set_access_token(access_token, access_secret)

@@ -18,5 +18,7 @@ DEFAULT_TXT_LIST_PATH: Final[str] = f"{DEFAULT_RES_PATH}/tweets-raw.csv"
 DEFAULT_TWEET_TBL_DST: Final[str] = f"{DEFAULT_RES_PATH}/tweets-tbl.csv"
 
 
-class TbcError(Exception):
-    pass
+# Message List
+MSG_ERR_LOAD_CFG: Final[str] = "Config File does not exists."
+MSG_ERR_NOT_FOUND_APIKEY: Final[str] = "Twitter API Tokens are not set"
+
