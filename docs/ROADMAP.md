@@ -64,7 +64,8 @@ idx,text,  tweeted,imageName
 
 status: `todo`
 
-Enable you to get image from link.
+1. Enable you to get image from link.
+2. Enable you to use tweet table on the cloud (GCS / GSpread)
 
 - Get media to send from link (local, web, gcs, gdrive)
   - `tbc bot send -m "Hello Twitter with Image!!" -i "https://xxx.png"`
@@ -77,6 +78,9 @@ idx,text,  tweeted,imageName
 0,  hello, 0,      https://yyy.png
 1,  hey,   0,      https://zzz.png
 ```
+
+- Support: tweet table source on Google Cloud Storage
+- Support: tweet table source on Google Spreadsheet on Google Drive
 
 
 ## Future
