@@ -42,15 +42,6 @@ def bot() -> None:
     )
 )
 @click.option(
-    "-mf",
-    "--msg-file",
-    type=str,
-    help=(
-        "[Option] Text file path that msg is written"
-        "e.g. tbc send -mf ./msg.txt"
-    )
-)
-@click.option(
     "-i",
     "--img-file",
     type=str,
@@ -71,7 +62,6 @@ def bot() -> None:
     )
 )
 def send(msg: Optional[str]=None,
-         msg_file: Optional[str]=None,
          img_file: Optional[str]=None,
          config: Optional[str]=None) -> None:
     """send tweet command"""
@@ -87,17 +77,10 @@ def send(msg: Optional[str]=None,
         sys.exit(1)
 
     # Parse message args
-    if (msg is None) and (msg_file is None):
+    if msg is None:
         print("No message is set.")
-    elif (msg is not None) and (msg_file is not None):
-        print("--msg and --msg-file option can be used only one of them.")
     else:
-        _msg_text = ""
-        if msg is not None:
-            _msg_text = msg
-        else:
-            with open(msg_file, 'r') as f:
-                _msg_text = f.read()
+        _msg_text = msg
         try:
             if img_file is None:
                 send_tweet_from_cli(cfg, _msg_text)
