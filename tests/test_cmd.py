@@ -1,5 +1,7 @@
 """cmd args parse tests"""
 
+import numpy as np
+import pandas as pd
 import pytest
 
 from tbc import (
@@ -193,3 +195,38 @@ def test_bot_send_invalid_no_msglike():
 # ==============================
 # source table validation
 # ==============================
+def test_src_tbl_valid_cols():
+    # Arange
+    _df = pd.DataFrame(data=np.arange(12).reshape(6, 2),
+                       columns=["text", "imgName"])
+
+    # Act
+    expected = True
+    actual = validate_tweet_tbl_cols(_df)
+
+    # Assert
+    assert expected is actual
+
+def test_src_tbl_invalid_no_text_col():
+    # Arange
+    _df = pd.DataFrame(data=np.arange(12).reshape(3, 4),
+                       columns=["a", "b", "c", "imgName"])
+
+    # Act
+    expected = False
+    actual = validate_tweet_tbl_cols(_df)
+
+    # Assert
+    assert expected is actual
+
+def test_src_tbl_invalid_no_imgname_col():
+    # Arange
+    _df = pd.DataFrame(data=np.arange(12).reshape(3, 4),
+                       columns=["a", "b", "c", "text"])
+
+    # Act
+    expected = False
+    actual = validate_tweet_tbl_cols(_df)
+
+    # Assert
+    assert expected is actual
