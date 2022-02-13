@@ -15,11 +15,11 @@ def get_long_desc() -> str:
 
 setup(
     name="tbc",
-    version="v1.0.0-beta",
+    version="v0.4.0",
     #long_description=get_long_desc(),
     long_description_content_type="text/markdown",
     author="Sota Masuda",
-    url="https://github.com/sota0121/twitter-bot",
+    url="https://github.com/sota0121/twitter-bot-cli",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     package_data={"data": ["config.yml"],},
