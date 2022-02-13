@@ -5,6 +5,7 @@ from typing import Optional
 from tbc.tbclib.config_parser import (TbcConfig, CfgParser)
 from tbc.tbclib.constants import *
 from tbc.tbclib.errors import *
+from tbc.tbclib.tbc_api import *
 from tbc.tbclib.wrapper import TweepyWrapper as tw
 from tbc.tbclib.wrapper import GspreadWrapper as gw
 from tbc.tbclib.wrapper import GCSWrapper as gcsw
@@ -56,17 +57,15 @@ def send_tweet(request):
         return f'tweeted > \n{tweet_str}'
 
 
-def send_tweet_from_cli(cfg: TbcConfig,
-                        msg: str,
-                        img_file: Optional[str] = None) -> None:
+def send_tweet_from_cli(cfg: TbcConfig, tc: TweetContent) -> None:
     tw_app = tw(cfg)
-    if img_file is None:
-        tw_app.api.update_status(status=msg)
+    if tc.img_path is None:
+        tw_app.api.update_status(status=tc.text)
     else:
         try:
-            with open(img_file, 'rb') as f:
+            with open(tc.img_path, 'rb') as f:
                 media = tw_app.api.media_upload(filename='img.jpg', file=f)
-                result = tw_app.api.update_status(status=msg,
+                result = tw_app.api.update_status(status=tc.text,
                                                 media_ids=[media.media_id])
         except Exception as e:
             print(repr(e))

@@ -8,6 +8,7 @@ from tbc.tbclib.constants import *
 from tbc.tbclib.make_tweets_list import TweetTableMaker
 from tbc.tbclib.send_tweet import send_tweet, send_tweet_from_cli
 from tbc.tbclib.config_parser import *
+from tbc.tbclib.tbc_api import *
 
 
 # Command Collection
@@ -38,6 +39,11 @@ def validate_options_bot_send(msg: Optional[str], img_file: Optional[str],
     # DON'T USE (src) without (sel_rand or sel_seq)
     if (src is not None) and ((sel_rand is False) and (sel_seq is None)):
         print(MSG_ERR_BOT_SEND_INVALID_OPT_3)
+        return False
+
+    # USE AT LEAST ONE ARG ABOUT MESSAGE DATA
+    if (msg is None) and (sel_rand is False) and (sel_seq is None):
+        print(MSG_ERR_BOT_SEND_INVALID_OPT_4)
         return False
 
     return True
@@ -142,19 +148,34 @@ def send(msg: Optional[str] = None,
         print(MSG_ERR_BOT_SEND_INVALID_OPT)
         sys.exit(1)
 
-    # Parse message args
+    # Create tweet content
+    tc = TweetContent()
     if msg is None:
-        print("No message is set.")
+        if sel_rand is True:
+            pass
+        elif sel_seq is not None:
+            pass
+        else:
+            pass
     else:
-        _msg_text = msg
-        try:
-            if img_file is None:
-                send_tweet_from_cli(cfg, _msg_text)
-            else:
-                send_tweet_from_cli(cfg, _msg_text, img_file)
-            print("successfully tweeted")
-        except Exception as e:
-            print(f"something is wrong ... ({repr(e)})")
+        tc.text = msg
+        if img_file is None:
+            pass
+        else:
+            tc.img_path = img_file
+
+    if tc.text_is_empty() is True:
+        print(MSG_ERR_BOT_SEND_INVALID_OPT)
+        sys.exit(1)
+
+
+    # Send tweet content
+    try:
+        send_tweet_from_cli(cfg, tc)
+        print("successfully tweeted")
+    except Exception as e:
+        print(f"something is wrong ... ({repr(e)})")
+
 
 
 # tbc config

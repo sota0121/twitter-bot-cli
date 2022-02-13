@@ -7,4 +7,13 @@ The main APIs that TBC exposes to manage twitter bot account.
 
 """
 
+from dataclasses import dataclass
 
+
+@dataclass
+class TweetContent:
+    text: str = ""
+    img_path: str = ""
+
+    def text_is_empty(self) -> bool:
+        return (self.text == "" or self.text is None)
