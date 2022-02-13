@@ -5,7 +5,7 @@ import sys
 from dataclasses import dataclass
 from enum import (Enum, IntEnum, unique)
 from pathlib import Path
-from typing import (Final, Optional)
+from typing import (Any, Final, Generator, List, Optional, Tuple)
 
 from yaml import safe_load
 from tbc.tbclib.constants import *
@@ -86,6 +86,46 @@ class TbcConfig:
     src_gspr_path: str = ""
     # keys ... future impl
 
+    def _get_attr_as_kvs(self) -> dict:
+        """get all of attributes as kvs"""
+        _dict = {
+            f"{CfgKeys.tw_.value}.{CfgKeys.tw_cns_key.value}":
+            str(self.tw_consumer_key),
+
+            f"{CfgKeys.tw_.value}.{CfgKeys.tw_cns_secret.value}":
+            str(self.tw_consumer_secret),
+
+            f"{CfgKeys.tw_.value}.{CfgKeys.tw_acc_token.value}":
+            str(self.tw_access_token),
+
+            f"{CfgKeys.tw_.value}.{CfgKeys.tw_acc_secret.value}":
+            str(self.tw_access_secret),
+
+            f"{CfgKeys.src_.value}.{CfgKeys.src_type.value}":
+            str(self.src_type),
+
+            f"{CfgKeys.src_.value}.{CfgKeys.src_lo_path.value}":
+            str(self.src_lo_path),
+
+            f"{CfgKeys.src_.value}.{CfgKeys.src_gcs_path.value}":
+            str(self.src_gcs_path),
+
+            f"{CfgKeys.src_.value}.{CfgKeys.src_gspr_path.value}":
+            str(self.src_gspr_path),
+        }
+        return _dict
+
+
+    def get_val(self, key: str) -> str:
+        """get the specific attr value with keyname"""
+        val = self._get_attr_as_kvs().get(key, "Invalid Key")
+        return str(val)
+
+    def get_all_items(self) -> Generator[Tuple[str,str],Any,Any]:
+        """attr key, value generator"""
+        for k, v in self._get_attr_as_kvs().items():
+            yield k, v
+
     def twitter_tokens_exist(self) -> bool:
         """Checks if twitter token info exists or not
 
@@ -101,6 +141,10 @@ class CfgParser:
     """config parser"""
     def __init__(self, path: Optional[str]=None) -> None:
         pass
+
+    @staticmethod
+    def default_cfg_name() -> str:
+        return ".tbcconfig.yml"
 
     @staticmethod
     def load(path: Optional[str]=None) -> TbcConfig:
@@ -152,13 +196,13 @@ class CfgParser:
             cfg.src_gspr_path = os.getenv(EnvKeys.src_gspr_path.value, "")
         return cfg
 
-    def _load_envval(self) -> None:
-        try:
-            cfg_file = Path(self._cfg_path)
-            if cfg_file.exists():
-                with open(self._cfg_path, 'r') as f:
-                    obj = safe_load(f)
-                    for k, v in obj.items():
-                        os.environ[k] = v
-        except Exception as e:
-            raise TbcError(f"failed to load environ file ({self._cfg_path})")
+    # def _load_envval(self) -> None:
+    #     try:
+    #         cfg_file = Path(self._cfg_path)
+    #         if cfg_file.exists():
+    #             with open(self._cfg_path, 'r') as f:
+    #                 obj = safe_load(f)
+    #                 for k, v in obj.items():
+    #                     os.environ[k] = v
+    #     except Exception as e:
+    #         raise TbcError(f"failed to load environ file ({self._cfg_path})")

@@ -10,14 +10,28 @@ from tbc.tbclib.send_tweet import send_tweet, send_tweet_from_cli
 from tbc.tbclib.config_parser import *
 
 
+# Command Collection
+# https://click.palletsprojects.com/en/8.0.x/commands/
+# https://click.palletsprojects.com/en/8.0.x/commands/#merging-multi-commands
+
+
 # tbc
-@click.group()
+@click.group(name='tbc')
 def main() -> None:
     click.echo("Welcome to tbc !!!")
 
 
-# tbc send
-@main.command()
+# tbc bot
+@main.group(
+    name='bot',
+    help="bot operation command"
+)
+def bot() -> None:
+    click.echo("bot sub command !!!")
+
+
+# tbc bot send
+@bot.command()
 @click.option(
     "-m",
     "--msg",
@@ -95,23 +109,56 @@ def send(msg: Optional[str]=None,
 
 
 # tbc config
-@main.command()
+@main.group(
+    name="config",
+    help="config operation command"
+)
+def config() -> None:
+    click.echo("tbc config !!!")
+
+
+# tbc config get
+@config.command(name="get")
 @click.option(
-    "-s",
-    "--secret",
+    "-k",
+    "--keyname",
     type=str,
     help=(
-        "config file path that secrets keys are written"
-        "e.g. tbc config --secret ./env.yml"
+        "select key name of\n"
+        "config values\n"
     )
 )
-def config(secret: Optional[str]=None) -> None:
-    """config operation"""
-    # Parse args
-    # -- config secret
-    if secret is not None:
-        click.echo(f"load : {secret}")
-        CfgParser(secret)
+def cfg_get(keyname: str) -> None:
+    """tbc config get"""
+    cfg_obj: TbcConfig = CfgParser.load(CfgParser.default_cfg_name())
+    target_val = cfg_obj.get_val(keyname)
+    print(f"{keyname}={target_val}")
+
+
+# tbc config list
+@config.command(name="list")
+def cfg_list() -> None:
+    """tbc config list"""
+    cfg_obj: TbcConfig = CfgParser.load(CfgParser.default_cfg_name())
+    for k, v in cfg_obj.get_all_items():
+        print(k, "=", v)
+
+# @click.option(
+#     "-s",
+#     "--secret",
+#     type=str,
+#     help=(
+#         "config file path that secrets keys are written"
+#         "e.g. tbc config --secret ./env.yml"
+#     )
+# )
+# def config(secret: Optional[str]=None) -> None:
+#     """config operation"""
+#     # Parse args
+#     # -- config secret
+#     if secret is not None:
+#         click.echo(f"load : {secret}")
+#         CfgParser(secret)
 
 
 if __name__ == "__main__":
