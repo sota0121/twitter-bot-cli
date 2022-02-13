@@ -42,7 +42,7 @@ Enable you to setup with cli.
 
 ## v0.4.0
 
-status: `todo`
+status: `done`
 
 Enable you to select tweet message from local csv file.
 
