@@ -99,7 +99,6 @@ def bot() -> None:
     "-ss",
     "--sel-seq",
     type=int,
-    default=False,
     help=(
         "[Option] Select specific record from tweet table\n"
         ".tbcconfig.yml > source\n"
@@ -165,7 +164,7 @@ def send(msg: Optional[str] = None,
             tc.img_path = img_file
 
     if tc.text_is_empty() is True:
-        print(MSG_ERR_BOT_SEND_INVALID_OPT)
+        print(MSG_ERR_BOT_SEND_EMPTY_MSG)
         sys.exit(1)
 
 

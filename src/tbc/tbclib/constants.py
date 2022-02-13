@@ -27,4 +27,5 @@ MSG_ERR_BOT_SEND_INVALID_OPT_1: Final[str] = "DON'T USE TOGETHER sel_rand and se
 MSG_ERR_BOT_SEND_INVALID_OPT_2: Final[str] = "DON'T USE (img_file) without (msg)"
 MSG_ERR_BOT_SEND_INVALID_OPT_3: Final[str] = "DON'T USE (src) without (sel_rand or sel_seq)"
 MSG_ERR_BOT_SEND_INVALID_OPT_4: Final[str] = "USE AT LEAST ONE ARG ABOUT MESSAGE DATA"
+MSG_ERR_BOT_SEND_EMPTY_MSG: Final[str] = "Stopped to send message, because empty message is input."
 
