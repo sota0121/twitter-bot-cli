@@ -31,8 +31,8 @@ Enable you to setup with cli.
 
 - User Features
   - Easy to operate twitter api secrets
-    - `tbc send --config xxxx.yml`
-    - create `.tbcconfig` and use this one as a default config file
+    - ~~`tbc send --config xxxx.yml`~~
+    - ~~create `.tbcconfig` and use this one as a default config file~~
     - ~~`tbc config --secret $CONFIG_FILE_PATH`~~
     - ~~load config file and set secrets to envval~~
 - Patches
